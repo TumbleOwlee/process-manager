@@ -50,11 +50,11 @@ def status(sock, args):
                 lengths.append(length)
             max_line = max(lengths)
             sep = ["─"] * min(term.width - 28, max_line - 7)
-            print("   State   │  ID  │ Command")
-            print("───────────┼──────┼─────────" + ''.join(sep))
+            print(f"   {term.blue}State{term.normal}   {term.yellow}│{term.normal}  {term.blue}ID{term.normal}  {term.yellow}│{term.normal} {term.blue}Command{term.normal}")
+            print(term.yellow + "───────────┼──────┼─────────" + ''.join(sep) + term.normal)
             for x in json:
-                alive = "   alive  " if json[x]['alive'] else " not alive"
-                print(alive + " │ {:04d}".format(int(x)) + " │ " + " ".join(json[x]['config']['command']))
+                alive = f"   {term.green}alive{term.normal}  " if json[x]['alive'] else f" {term.red}not alive{term.normal}"
+                print(alive + f" {term.yellow}│{term.normal} " + "{:04d}".format(int(x)) + f" {term.yellow}│{term.normal} " + " ".join(json[x]['config']['command']))
 
 
 # Kill a specific pid or choose from list
