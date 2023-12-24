@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import os
+import pwd
 import inquirer
 import requests_unixsocket
 from blessings import Terminal
@@ -88,8 +89,9 @@ def kill(sock, args):
 
 
 if __name__ == '__main__':
+    username = pwd.getpwuid(os.getuid())[0]
     parser = ArgumentParser(description="Process management tool.")
-    parser.add_argument("--sock", "-s", required=False, default="/tmp/process-mgmt.sock")
+    parser.add_argument("--sock", "-s", help=f"Socket file to use. [default: /tmp/process-mgmt-{username}.sock]", required=False, default=f"/tmp/process-mgmt-{username}.sock")
     parser.add_argument("--cwd", "-c", required=False, default=os.getcwd())
     subparsers = parser.add_subparsers(title='subcommands', dest="command")
     run_parser = subparsers.add_parser(name='run')

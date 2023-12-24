@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import os
+import pwd
 import shutil
 import subprocess
 from argparse import ArgumentParser
@@ -13,6 +14,8 @@ app = Flask(__name__)
 data = dict()
 next_id = 1
 
+# Get username
+username = pwd.getpwuid(os.getuid())[0]
 
 # Extract value from request payload
 def get_or(key: str, default=None):
@@ -72,13 +75,13 @@ def run():
     }
 
     # Create directory
-    if os.path.exists(f"/tmp/process-mgmt/{next_id}"):
-        shutil.rmtree(f"/tmp/process-mgmt/{next_id}")
-    os.mkdir(f"/tmp/process-mgmt/{next_id}")
+    if os.path.exists(f"/tmp/process-mgmt-{username}/{next_id}"):
+        shutil.rmtree(f"/tmp/process-mgmt-{username}/{next_id}")
+    os.mkdir(f"/tmp/process-mgmt-{username}/{next_id}")
 
     # Create output files
-    stdout = open(f"/tmp/process-mgmt/{next_id}/stdout", 'w')
-    stderr = open(f"/tmp/process-mgmt/{next_id}/stderr", 'w')
+    stdout = open(f"/tmp/process-mgmt-{username}/{next_id}/stdout", 'w')
+    stderr = open(f"/tmp/process-mgmt-{username}/{next_id}/stderr", 'w')
 
     # Setup environment
     env = os.environ.copy()
@@ -106,12 +109,12 @@ def run():
 if __name__ == '__main__':
     parser = ArgumentParser(description="Process management engine.")
     req_group = parser.add_argument_group("required")
-    req_group.add_argument("--file", type=str, help="Unix socket file.", default="/tmp/process-mgmt.sock")
+    req_group.add_argument("--file", type=str, help=f"Unix socket file. [default: /tmp/process-mgmt-{username}.sock]", default=f"/tmp/process-mgmt-{username}.sock")
     args = parser.parse_args()
 
-    if os.path.exists("/tmp/process-mgmt"):
-        shutil.rmtree("/tmp/process-mgmt")
-    os.mkdir("/tmp/process-mgmt")
+    if os.path.exists(f"/tmp/process-mgmt-{username}"):
+        shutil.rmtree(f"/tmp/process-mgmt-{username}")
+    os.mkdir(f"/tmp/process-mgmt-{username}")
 
     path = os.path.abspath(args.file)
     print(f"[i] Unix socket: unix://{path}")
