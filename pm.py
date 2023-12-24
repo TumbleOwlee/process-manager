@@ -42,8 +42,16 @@ def status(sock, args):
         if len(json) == 0:
             print(f"{term.yellow}[!]{term.normal} No processes found.")
         else:
+            lengths = []
+            for x in json:
+                length = len(json[x]['config']['command']) - 1
+                for y in json[x]['config']['command']:
+                    length += len(y)
+                lengths.append(length)
+            max_line = max(lengths)
+            sep = ["─"] * min(term.width - 28, max_line - 7)
             print("   State   │  ID  │ Command")
-            print("───────────┼──────┼───────────────────────────────────────────────────────────────────────────")
+            print("───────────┼──────┼─────────" + ''.join(sep))
             for x in json:
                 alive = "   alive  " if json[x]['alive'] else " not alive"
                 print(alive + " │ {:04d}".format(int(x)) + " │ " + " ".join(json[x]['config']['command']))
