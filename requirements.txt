@@ -1,0 +1,2 @@
+blessings>=1.7.0
+requests_unixsocket>=0.3.0
