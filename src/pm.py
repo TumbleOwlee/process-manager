@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 import os
 import pwd
@@ -61,10 +61,11 @@ def status(sock, args):
 # Kill a specific pid or choose from list
 def kill(sock, args):
     session = requests_unixsocket.Session()
-    if args.pid is not None:
-        resp = session.get(f"{sock}/kill/{args.pid}")
-        if resp.status_code != 200:
-            print(f"{term.yellow}[!]{term.normal} Kill command rejected by daemon.")
+    if args.PID is not None and len(args.PID) > 0:
+        for pid in args.PID:
+            resp = session.get(f"{sock}/kill/{pid}")
+            if resp.status_code != 200:
+                print(f"{term.yellow}[!]{term.normal} Kill command for PID={pid} rejected by daemon.")
     else:
         resp = session.get(f"{sock}/status")
         if resp.status_code != 200:
@@ -98,7 +99,7 @@ if __name__ == '__main__':
     run_parser.add_argument("--env", "-e", help="Environment pairs of <NAME>=<VALUE>", nargs="*")
     run_parser.add_argument("ARGS", help="Command arguments", nargs="*")
     kill_parser = subparsers.add_parser(name='kill')
-    kill_parser.add_argument("--pid", '-p', required=False, help="Process identifier.")
+    kill_parser.add_argument("PID", help="Process identifier.", nargs="*")
     status_parser = subparsers.add_parser(name='status')
     args = parser.parse_args()
 
