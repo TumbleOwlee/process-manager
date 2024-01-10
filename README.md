@@ -32,3 +32,7 @@ While the daemon is active you can command it to start and kill processes or to 
 ./pm.py kill <PID1> <PID2> ...
 # You can also just run `pm.py kill` and a list is presented that allows you to select the processes to kill.
 ```
+
+# Example
+
+![Example](images/example.png)
