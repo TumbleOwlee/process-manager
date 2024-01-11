@@ -35,4 +35,8 @@ While the daemon is active you can command it to start and kill processes or to 
 
 # Example
 
-![Example](images/example.png)
+Please note that the horizontal line of the table outputs is only messed up in the recording because of the the conversion to `svg` for embedding.
+
+<p align="center">
+  <img width="600" src="images/example.svg">
+</p>
