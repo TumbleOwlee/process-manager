@@ -86,9 +86,7 @@ def run():
     env = {**env, **cfg["environment"]}
 
     # Start process
-    print(
-        f"[i] Start process {next_id} in {cfg['working_directory']} with: {cfg['command']}"
-    )
+    print(f"[i] Start process {next_id} in {cfg['working_directory']} with: {cfg['command']}")
     process = subprocess.Popen(
         cfg["command"],
         env=env,

@@ -54,17 +54,10 @@ def status(sock, args):
             print(
                 f"   {term.blue}State{term.normal}   {term.yellow}│{term.normal}  {term.blue}ID{term.normal}  {term.yellow}│{term.normal} {term.blue}Command{term.normal}"
             )
-            print(
-                term.yellow
-                + "───────────┼──────┼─────────"
-                + "".join(sep)
-                + term.normal
-            )
+            print(term.yellow + "───────────┼──────┼─────────" + "".join(sep) + term.normal)
             for x in json:
                 alive = (
-                    f"   {term.green}alive{term.normal}  "
-                    if json[x]["alive"]
-                    else f" {term.red}not alive{term.normal}"
+                    f"   {term.green}alive{term.normal}  " if json[x]["alive"] else f" {term.red}not alive{term.normal}"
                 )
                 print(
                     alive
@@ -82,9 +75,7 @@ def kill(sock, args):
         for pid in args.PID:
             resp = session.get(f"{sock}/kill/{pid}")
             if resp.status_code != 200:
-                print(
-                    f"{term.yellow}[!]{term.normal} Kill command for PID={pid} rejected by daemon."
-                )
+                print(f"{term.yellow}[!]{term.normal} Kill command for PID={pid} rejected by daemon.")
     else:
         resp = session.get(f"{sock}/status")
         if resp.status_code != 200:
@@ -92,24 +83,16 @@ def kill(sock, args):
         else:
             json = resp.json()
             choices = [
-                "{:4d}".format(int(x)) + ": " + " ".join(json[x]["config"]["command"])
-                for x in json
-                if json[x]["alive"]
+                "{:4d}".format(int(x)) + ": " + " ".join(json[x]["config"]["command"]) for x in json if json[x]["alive"]
             ]
             if len(choices) > 0:
-                questions = [
-                    inquirer.Checkbox(
-                        "pid", message="What process ids to terminate?", choices=choices
-                    )
-                ]
+                questions = [inquirer.Checkbox("pid", message="What process ids to terminate?", choices=choices)]
                 answers = inquirer.prompt(questions)["pid"]
                 for answer in answers:
                     pid = answer.split(":", 1)[0].strip()
                     resp = session.get(f"{sock}/kill/{pid}")
                     if resp.status_code != 200:
-                        print(
-                            f"{term.yellow}[!]{term.normal} Kill command rejected by daemon for pid={pid}."
-                        )
+                        print(f"{term.yellow}[!]{term.normal} Kill command rejected by daemon for pid={pid}.")
             else:
                 print(f"{term.yellow}[!]{term.normal} No active processes found.")
 
@@ -127,9 +110,7 @@ if __name__ == "__main__":
     parser.add_argument("--cwd", "-c", required=False, default=os.getcwd())
     subparsers = parser.add_subparsers(title="subcommands", dest="command")
     run_parser = subparsers.add_parser(name="run")
-    run_parser.add_argument(
-        "--env", "-e", help="Environment pairs of <NAME>=<VALUE>", nargs="*"
-    )
+    run_parser.add_argument("--env", "-e", help="Environment pairs of <NAME>=<VALUE>", nargs="*")
     run_parser.add_argument("ARGS", help="Command arguments", nargs="*")
     kill_parser = subparsers.add_parser(name="kill")
     kill_parser.add_argument("PID", help="Process identifier.", nargs="*")
