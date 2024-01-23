@@ -2,6 +2,8 @@
 
 # Introduction
 
+[![Black Formatter](https://github.com/TumbleOwlee/process-manager/actions/workflows/black.yml/badge.svg)](https://github.com/TumbleOwlee/process-manager/actions/workflows/black.yml)
+
 This repository provides a simple daemon and CLI tool to execute and manage background processes.
 
 # Quickstart
